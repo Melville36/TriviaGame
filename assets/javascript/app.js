@@ -47,6 +47,8 @@
       //  We just pass the name of the interval
       //  to the clearInterval function.
       clearInterval(intervalId);
+      $("#timeRemaining").html("0");
+
     }
 
     
@@ -58,7 +60,7 @@
 
     });
 
-var randomQuestion = triviaQuestions[Math.floor(Math.random()*triviaQuestions.length)];
+
 var selectedQuestion;
 var questionNum1 = 0;
 var questionNum2 = 0;
@@ -70,7 +72,7 @@ var thirdQuestion = triviaQuestions[2];
     function questionOne () {    
 
       // Set the html equal to the first question
-      $("#triviaQA").html(firstQuestion + "<br>");
+      $("#triviaQA").html("<h2>" + firstQuestion + "</h2>" + "<br>");
 
       //Set selected question equal firstQuestion
       selectedQuestion = firstQuestion;
@@ -94,8 +96,8 @@ var thirdQuestion = triviaQuestions[2];
     
   function questionTwo () {    
 
-      // Set the html equal to the first question
-      $("#triviaQA").html(secondQuestion + "<br>");
+      // Set the html equal to the second question
+      $("#triviaQA").html("<h2>" + secondQuestion + "</h2>" + "<br>");
 
       //Set selected question equal firstQuestion
       selectedQuestion = secondQuestion;
@@ -113,14 +115,14 @@ var thirdQuestion = triviaQuestions[2];
           answerButton.text(answers2[b]);
           $("#triviaQA").append(answerButton);
         }
-        //activateButtons();
+        activateButtons();
         questionNum2 = 1;
     }
 
     function questionThree () {    
 
-      // Set the html equal to the first question
-      $("#triviaQA").html(thirdQuestion + "<br>");
+      // Set the html equal to the third question
+      $("#triviaQA").html("<h2>" + thirdQuestion + "</h2>" + "<br>");
 
       //Set selected question equal firstQuestion
       selectedQuestion = thirdQuestion;
@@ -138,7 +140,7 @@ var thirdQuestion = triviaQuestions[2];
           answerButton.text(answers3[c]);
           $("#triviaQA").append(answerButton);
         }
-        //activateButtons();
+        activateButtons();
         questionNum3 = 1;
     }
 
@@ -151,36 +153,46 @@ function activateButtons() {
         var chosenAnswer = ($(this).attr("value"));
         //console.log(selectedQuestion);
         //console.log(chosenAnswer);
-        if (chosenAnswer == "1987"){
+        
+        if(questionNum2 == 0){
+          if (chosenAnswer == "1987"){
             correct++;
-            nextQuestion();
-          }
-        if (chosenAnswer == "Bo Jackson") {
-            correct++;
-            nextQuestion();
-          } 
-        if (chosenAnswer = "New York Giants") {
-            correct++;
-            nextQuestion();
-          }
-
-
-        else {
+            
+          }else {
             incorrect++;
-            nextQuestion();
+            
           }
+        }
+        
+        else if (questionNum3 == 0) {
+          if (chosenAnswer == "Bo Jackson") {
+            correct++;
+            
+          } else {
+            incorrect++;
+           
+          }
+        }
+
+        else if (questionNum3 == 1) {
+            if (chosenAnswer = "New York Giants") {
+            correct++;
+            gameResults();
+          }else {
+            incorrect++;
+            gameResults();
+          }
+        } 
+      
+      stop();
+      nextQuestion();
+
+        
   
       });
  
   }
 
-  function correctGuess () {
-      correct++;
-  }
-
-  function incorrectGuess () {
-    
-  }
 
   function nextQuestion() {
     if (questionNum2 == 0){
@@ -203,10 +215,11 @@ function activateButtons() {
   function calcResults (){
     var percentCorrect = ((correct/3) * 100);
     $("#triviaQA").html("Correct Answers: " + correct + "<br>" + "Incorrect Answers: " + incorrect + "<br>" + "Percent Correct: " + percentCorrect + "%" + "<br>" + "Game will restart in 10 seconds!");
-    setTimeout(reset,10000);
+    setTimeout(reset, 10000);
   }
 
   function gameResults () {
+    stop();
     calcResults();
   }
 
@@ -215,6 +228,27 @@ function activateButtons() {
   /////// Reset Game
 
   function reset () {
+    // Reset Counter to 30
+    number = 30;
+
+    //Reset evalutation variables
+    questionNum1 = 0;
+    questionNum2 = 0;
+    questionNum3 = 0;
+    correct = 0;
+    incorrect = 0;
+    chosenAnswer = "";
+    
+    //  Variable that will hold our interval ID when we execute
+    //  the "run" function
+   clearInterval(intervalId);
+   intervalId;
+
+    //Start counter
+    run();
+
+    //Restart first question
+    questionOne();
 
 }
  
